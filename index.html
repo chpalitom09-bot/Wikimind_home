@@ -46,6 +46,7 @@
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
         .animate-float { animation: float 6s ease-in-out infinite; }
 
         /* Cards */
@@ -143,7 +144,8 @@
         </div>
 
         <!-- APP GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <!-- Update grid to handle 4 items (2 cols on md, 4 cols on lg) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
             
             <!-- CARD 1: WIKIMIND AI -->
             <a href="https://chpalitom09-bot.github.io/Wikimind/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-100 no-underline text-inherit h-80">
@@ -156,7 +158,7 @@
                     </div>
                     <h3 class="text-2xl font-bold mb-2">WikiMind AI</h3>
                     <p class="text-sm text-gray-500 font-medium leading-relaxed">
-                        L'assistant cognitif ultime. Génération de texte, d'images, analyse de documents et bibliothèque d'apps intégrée.
+                        L'assistant cognitif ultime. Génération de texte, images et bibliothèque d'apps intégrée.
                     </p>
                 </div>
                 <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
@@ -174,7 +176,7 @@
                     </div>
                     <h3 class="text-2xl font-bold mb-2">WikiMind BAC</h3>
                     <p class="text-sm text-gray-500 font-medium leading-relaxed">
-                        Simulateur de moyenne précis pour le Bac 2026. Gestion des coefficients et spécialités (Général, Techno, Pro).
+                        Simulateur de moyenne précis pour le Bac 2026. Gestion des coefficients et spécialités.
                     </p>
                 </div>
                 <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
@@ -193,11 +195,30 @@
                     </div>
                     <h3 class="text-2xl font-bold mb-2">WikiMind Study</h3>
                     <p class="text-sm text-gray-500 font-medium leading-relaxed">
-                        Interface de focus Pomodoro intelligente. Gestionnaire de tâches intégré et ambiance sonore adaptative.
+                        Interface de focus Pomodoro intelligente. Gestionnaire de tâches et ambiance sonore.
                     </p>
                 </div>
                 <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
                     Réviser <span class="text-lg">→</span>
+                </div>
+            </a>
+
+            <!-- CARD 4: WIKIMIND MATHS -->
+            <a href="https://chpalitom09-bot.github.io/Wikimind_maths/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-400 no-underline text-inherit h-80">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div class="icon-box group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
+                            📐
+                        </div>
+                        <span class="bg-purple-100 text-purple-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Sciences</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">WikiMind Maths</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">
+                        Solveur intelligent pour vos problèmes de maths. Analyse logique et résolution détaillée.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
+                    Résoudre <span class="text-lg">→</span>
                 </div>
             </a>
 
