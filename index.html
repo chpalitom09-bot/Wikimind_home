@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WikiMind - La Suite Intelligente</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #111111;
+            --card-bg: #f9fafb;
+            --border: #e5e7eb;
+            --accent: #000000;
+            --accent-text: #ffffff;
+        }
+
+        .dark-mode {
+            --bg: #0f0f0f;
+            --text: #eeeeee;
+            --card-bg: #161616;
+            --border: #252525;
+            --accent: #ffffff;
+            --accent-text: #000000;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+
+        .animate-fade { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        /* Cards */
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--text);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .dark-mode .app-card:hover {
+            box-shadow: 0 20px 40px rgba(255,255,255,0.05);
+        }
+
+        .icon-box {
+            width: 60px; height: 60px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            margin-bottom: 1.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--accent-text);
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        /* Background Grain */
+        .bg-grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            z-index: 100; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: var(--bg); border: 1px solid var(--border);
+            padding: 2rem; border-radius: 24px; width: 90%; max-width: 500px;
+            max-height: 80vh; overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative">
+    <div class="bg-grain"></div>
+
+    <!-- NAVBAR -->
+    <header class="fixed top-0 w-full z-50 border-b border-gray-200/50 dark:border-gray-800/50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-black dark:bg-white text-white dark:text-black rounded-xl flex items-center justify-center font-black text-xl hover:rotate-12 transition-transform duration-300">W</div>
+                <!-- MODIFICATION : Juste WikiMind -->
+                <h1 class="text-xl font-black uppercase tracking-tighter italic">WikiMind</h1>
+            </div>
+            
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-800 transition">
+                <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <main class="flex-grow pt-32 pb-20 px-6 max-w-7xl mx-auto w-full z-10 flex flex-col justify-center">
+        
+        <div class="text-center mb-24 animate-fade">
+            <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-zinc-900 text-[10px] font-bold uppercase tracking-widest text-gray-500 animate-float">
+                La Suite Intelligente
+            </div>
+            <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-6 leading-tight">
+                BOOSTEZ VOTRE<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500">POTENTIEL.</span>
+            </h2>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto font-medium">
+                Une suite d'outils connectés pour apprendre, créer et s'organiser. Propulsé par une architecture IA de pointe.
+            </p>
+        </div>
+
+        <!-- APP GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+            
+            <!-- CARD 1: WIKIMIND AI -->
+            <a href="https://chpalitom09-bot.github.io/Wikimind/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-100 no-underline text-inherit h-80">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div class="icon-box group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
+                            🧠
+                        </div>
+                        <span class="bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Flagship</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">WikiMind AI</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">
+                        L'assistant cognitif ultime. Génération de texte, d'images, analyse de documents et bibliothèque d'apps intégrée.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
+                    Lancer l'App <span class="text-lg">→</span>
+                </div>
+            </a>
+
+            <!-- CARD 2: WIKIMIND BAC -->
+            <a href="https://chpalitom09-bot.github.io/WikiMind_Bac/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-200 no-underline text-inherit h-80">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div class="icon-box group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
+                            🎓
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">WikiMind BAC</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">
+                        Simulateur de moyenne précis pour le Bac 2026. Gestion des coefficients et spécialités (Général, Techno, Pro).
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
+                    Calculer <span class="text-lg">→</span>
+                </div>
+            </a>
+
+            <!-- CARD 3: WIKIMIND STUDY -->
+            <a href="https://chpalitom09-bot.github.io/WikiMind_study/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-300 no-underline text-inherit h-80">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div class="icon-box group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
+                            ⏱️
+                        </div>
+                        <span class="bg-green-100 text-green-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Productivité</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">WikiMind Study</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">
+                        Interface de focus Pomodoro intelligente. Gestionnaire de tâches intégré et ambiance sonore adaptative.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
+                    Réviser <span class="text-lg">→</span>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- ABOUT SECTIONS -->
+        <div class="mt-24 border-t border-gray-100 dark:border-gray-800 pt-16 grid grid-cols-1 lg:grid-cols-2 gap-16 animate-fade delay-300">
+            
+            <!-- BLOC 1: POURQUOI WIKIMIND ? -->
+            <div>
+                <h3 class="text-3xl font-black uppercase tracking-tight mb-4">Pourquoi WikiMind ?</h3>
+                <p class="text-gray-500 leading-relaxed mb-8">
+                    Contrairement aux outils classiques, l'écosystème WikiMind est conçu pour être modulaire, respectueux de la vie privée (Local Storage) et interconnecté. Une seule identité pour tous vos outils.
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-gray-800">
+                        <div class="font-bold mb-1">🔒 100% Local</div>
+                        <div class="text-xs text-gray-500">Données stockées sur votre appareil.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-gray-50 dark:bg-zinc-900 border border-gray-100 dark:border-gray-800">
+                        <div class="font-bold mb-1">🚀 Multi-Modèles</div>
+                        <div class="text-xs text-gray-500">Llama, Mistral, Gemini réunis.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOC 2: POURQUOI CE NOM ? (NOUVEAU) -->
+            <div>
+                <h3 class="text-3xl font-black uppercase tracking-tight mb-4">Pourquoi ce nom ?</h3>
+                <div class="text-gray-500 leading-relaxed space-y-4">
+                    <p>
+                        À l'origine, le projet est né d'une idée simple : créer une intelligence artificielle capable de sourcer ses réponses directement depuis les données fiables de 
+                        <a href="https://www.wikipedia.org/" target="_blank" rel="noopener noreferrer" class="font-bold text-black dark:text-white underline hover:no-underline transition">Wikipedia</a>.
+                    </p>
+                    <p>
+                        C'est de cet héritage que vient le préfixe <strong>"Wiki"</strong>. Le suffixe <strong>"Mind"</strong> (l'esprit) incarne la capacité de réfléchir, d'analyser et de synthétiser.
+                    </p>
+                    <p class="font-medium text-black dark:text-white">
+                        Au fil du temps, le projet a grandi. WikiMind n'est plus seulement une IA, mais une suite complète d'outils qui s'améliore chaque jour pour répondre à vos besoins.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-10 z-10 bg-white/50 dark:bg-black/50 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <div class="font-black uppercase tracking-tight text-sm">WikiMind Project</div>
+                <div class="text-xs text-gray-500 mt-1">© 2026 Tous droits réservés.</div>
+            </div>
+            <div class="flex gap-6 text-xs font-bold uppercase tracking-widest text-gray-400">
+                <button onclick="openModal('legal-modal')" class="hover:text-black dark:hover:text-white transition">Mentions Légales</button>
+                <button onclick="openModal('privacy-modal')" class="hover:text-black dark:hover:text-white transition">Confidentialité</button>
+                <a href="https://github.com/chpalitom09-bot" target="_blank" class="hover:text-black dark:hover:text-white transition">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LEGAL MODAL -->
+    <div id="legal-modal" class="modal" onclick="closeModal('legal-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-black uppercase mb-4">Mentions Légales</h3>
+            <div class="text-sm text-gray-500 space-y-4 leading-relaxed">
+                <p><strong>Éditeur :</strong> Projet Open Source WikiMind, développé par Tom Duval et l'équipe Pépins de Tomates.</p>
+                <p><strong>Hébergement :</strong> Ce site est hébergé par GitHub Pages (GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA).</p>
+                <p><strong>Propriété Intellectuelle :</strong> L'ensemble des éléments graphiques et logiciels (hors bibliothèques tierces) sont la propriété du projet WikiMind. Toute reproduction est interdite sans autorisation.</p>
+                <p><strong>Responsabilité :</strong> Les outils (IA, Calculateur Bac) sont fournis à titre indicatif. L'éditeur ne saurait être tenu responsable des erreurs de calcul ou des hallucinations de l'IA.</p>
+            </div>
+            <button onclick="closeModal('legal-modal')" class="w-full mt-6 btn-primary py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Fermer</button>
+        </div>
+    </div>
+
+    <!-- PRIVACY MODAL -->
+    <div id="privacy-modal" class="modal" onclick="closeModal('privacy-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-black uppercase mb-4">Politique de Confidentialité</h3>
+            <div class="text-sm text-gray-500 space-y-4 leading-relaxed">
+                <p><strong>Données Personnelles :</strong> WikiMind est conçu selon le principe de "Privacy First". Aucune donnée personnelle (nom, chats, notes) n'est envoyée sur nos serveurs. Tout est stocké localement dans votre navigateur (Local Storage).</p>
+                <p><strong>APIs Tierces :</strong> Pour fonctionner, l'IA communique avec des fournisseurs tiers (Groq, Mistral). Les textes envoyés sont anonymisés autant que possible, mais ne partagez jamais d'informations sensibles.</p>
+                <p><strong>Cookies :</strong> Nous n'utilisons pas de cookies traceurs publicitaires. Uniquement des cookies techniques pour sauvegarder vos préférences (thème sombre, historique local).</p>
+            </div>
+            <button onclick="closeModal('privacy-modal')" class="w-full mt-6 btn-primary py-3 rounded-xl font-bold text-xs uppercase tracking-widest">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        // --- THEME MANAGEMENT ---
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('wikimind_landing_theme', isDark ? 'dark' : 'light');
+            
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const path = document.querySelector('#theme-icon path');
+            if(isDark) {
+                // Sun icon
+                path.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z');
+            } else {
+                // Moon icon
+                path.setAttribute('d', 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z');
+            }
+        }
+
+        // Init Theme
+        const savedTheme = localStorage.getItem('wikimind_landing_theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode');
+            updateThemeIcon(true);
+        }
+
+        // --- MODAL MANAGEMENT ---
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.querySelector('.modal-content').style.transform = 'scale(1)';
+                modal.querySelector('.modal-content').style.opacity = '1';
+            }, 10);
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
