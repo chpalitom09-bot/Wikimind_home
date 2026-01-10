@@ -47,6 +47,7 @@
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
         .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; } /* Ajouté pour la nouvelle carte */
         .animate-float { animation: float 6s ease-in-out infinite; }
 
         /* Cards */
@@ -57,12 +58,17 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
+            /* Flex layout sizing for centering */
+            width: 100%;
+            flex: 1 1 300px; /* Grow, Shrink, Basis */
+            max-width: 400px; /* Empêche les cartes d'être trop larges */
         }
         
         .app-card:hover {
             transform: translateY(-5px) scale(1.02);
             border-color: var(--text);
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            z-index: 10;
         }
         .dark-mode .app-card:hover {
             box-shadow: 0 20px 40px rgba(255,255,255,0.05);
@@ -142,8 +148,8 @@
             </p>
         </div>
 
-        <!-- APP GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <!-- APP GRID (Modifié en FLEX pour centrer les éléments) -->
+        <div class="flex flex-wrap justify-center gap-6 w-full">
             
             <!-- CARD 1: WIKIMIND AI -->
             <a href="https://chpalitom09-bot.github.io/Wikimind/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-100 no-underline text-inherit h-80">
@@ -201,9 +207,8 @@
                 </div>
             </a>
 
-            <!-- CARD 4: WIKIMIND MATHS (Nouvelle Ligne) -->
-            <!-- md:col-start-2 permet de centrer la carte sur la ligne du dessous sur PC -->
-            <a href="https://chpalitom09-bot.github.io/Wikimind_maths/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-400 no-underline text-inherit h-80 md:col-start-2">
+            <!-- CARD 4: WIKIMIND MATHS -->
+            <a href="https://chpalitom09-bot.github.io/Wikimind_maths/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-400 no-underline text-inherit h-80">
                 <div>
                     <div class="flex justify-between items-start">
                         <div class="icon-box group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
@@ -218,6 +223,25 @@
                 </div>
                 <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
                     Résoudre <span class="text-lg">→</span>
+                </div>
+            </a>
+
+            <!-- CARD 5: WIKIMIND LANGUAGE (NOUVEAU) -->
+            <a href="https://chpalitom09-bot.github.io/Wikimind_langues/" target="_blank" class="app-card p-8 group flex flex-col justify-between animate-fade delay-500 no-underline text-inherit h-80">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <div class="icon-box group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
+                            🌍
+                        </div>
+                        <span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Linguistique</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">WikiMind Lang</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">
+                        Apprenez l'anglais, l'espagnol et plus. Parcours adaptatif, flashcards et professeur IA personnel.
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest mt-6 group-hover:gap-4 transition-all duration-300">
+                    Apprendre <span class="text-lg">→</span>
                 </div>
             </a>
 
